@@ -1,6 +1,6 @@
 const React = require('react')
 const {canvasStyle, mirrorProps} = require('./common')
-const {omit} = require('./helpers')
+const {omit, string_as_unicode_escape} = require('./helpers')
 
 function prevSibling (node, count) {
   while (node && count--) {
@@ -100,7 +100,8 @@ class LinesEllipsis extends React.Component {
     }
     this.maxLine = +props.maxLine || 1
     this.canvas.innerHTML = this.units.map((c) => {
-      return `<span class='LinesEllipsis-unit'>${c}</span>`
+      const char = string_as_unicode_escape(c)
+      return `<span class='LinesEllipsis-unit'>${char}</span>`
     }).join('')
     const ellipsisIndex = this.putEllipsis(this.calcIndexes())
     const clamped = ellipsisIndex > -1
@@ -120,7 +121,15 @@ class LinesEllipsis extends React.Component {
     let line = 1
     let offsetTop = elt.offsetTop
     while ((elt = elt.nextElementSibling)) {
-      if (elt.offsetTop > offsetTop) {
+      const temp = elt.innerHTML
+      const alphabet = []
+      for (let a = 65; a <= 65 + 26*2 ; a++) {
+        alphabet.push(a)
+      }
+      elt.innerHTML = alphabet.includes(parseInt(elt.innerHTML.replace(/\\u/g, '', 16))) 
+        ? String.fromCharCode(parseInt(elt.innerHTML.replace(/\\u/g, '', 16)))
+        : 'i'
+      if (elt.offsetTop > offsetTop || temp === '\\u000a') {
         line++
         indexes.push(index)
         offsetTop = elt.offsetTop

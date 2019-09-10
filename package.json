@@ -9,8 +9,7 @@
   "scripts": {
     "test": "standard && jest",
     "lint:fix": "standard --fix",
-    "prebuild": "mkdir -p lib",
-    "build": "for js in src/*.js; do babel $js > \"lib/$(basename $js)\"; done",
+    "build": "babel src/common.js > \"lib/common.js\" && babel src/helpers.js > \"lib/helpers.js\" && babel src/html.js > \"lib/html.js\" && babel src/index.js > \"lib/index.js\" && babel src/loose.js > \"lib/loose.js\" && babel src/responsiveHOC.js > \"lib/responsiveHOC.js\"",
     "docs": "browserify -e docs/app.js --transform-key=docs | uglifyjs -m -b max_line_len=800,beautify=false > docs/app.bundle.js",
     "docs:watch": "watchify -e docs/app.js --transform-key=docs -o docs/app.bundle.js",
     "prepare": "npm run build"
