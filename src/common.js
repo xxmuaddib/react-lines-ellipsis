@@ -7,7 +7,8 @@ module.exports = {
     overflow: 'hidden',
     'padding-top': 0,
     'padding-bottom': 0,
-    border: 'none'
+    border: 'none',
+    'word-wrap': 'break-word'
   },
 
   mirrorProps: [
